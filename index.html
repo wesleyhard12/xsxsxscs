@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>Mini Chatbot</title>
+    <link rel="stylesheet" type="text/css" href="./public/css/style.css?1">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<script type="text/javascript" src="./public/js/transition.min.js"></script>
+
+
+
+
+	<style type="text/css">
+
+	    body {
+	    	margin: 0;
+	    	padding: 0;
+	    	background: #e5dcdc;
+	    	box-sizing: border-box;
+	    }
+
+	    form {
+	    	display: flow-root;
+    		margin-top: 1.1rem;
+	    }
+
+		.modal-config {
+			  width: 350px;
+		    display: flex;
+		    height: 400px;
+		    position: absolute;
+		    top: 5rem;
+		    padding: .75rem;
+		    left: 0.3rem;
+		    border-radius: .3rem;
+		    color: white;
+
+		    box-shadow: 0px 0px 12px 4px rgb(93 88 88 / 70%);
+
+		}
+
+		.content-icon {
+			width: 40px;
+			fill: white;
+			padding: .75rem;
+		}
+
+		#innerHTML {
+			width: 100%;
+
+			height: 430px;
+            overflow: auto;
+            position: relative;
+            display: block;
+            margin-bottom: 3rem;
+		}
+
+
+		/* width */
+		::-webkit-scrollbar {
+		    width: 4px;
+		}
+
+		/* Track */
+		::-webkit-scrollbar-track {
+		    background: #f1f1f1; 
+		}
+
+		/* Handle */
+		::-webkit-scrollbar-thumb {
+		    background: rgb(63, 68, 68); 
+		}
+
+		/* Handle on hover */
+		::-webkit-scrollbar-thumb:hover {
+		    background: rgb(75, 80, 80); 
+        }
+
+  		
+
+	</style>
+
+</head>
+<body>
+
+    <div class="modal-config" id="config">
+      <span class="content-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path d="M24 13.616v-3.232c-1.651-.587-2.694-.752-3.219-2.019v-.001c-.527-1.271.1-2.134.847-3.707l-2.285-2.285c-1.561.742-2.433 1.375-3.707.847h-.001c-1.269-.526-1.435-1.576-2.019-3.219h-3.232c-.582 1.635-.749 2.692-2.019 3.219h-.001c-1.271.528-2.132-.098-3.707-.847l-2.285 2.285c.745 1.568 1.375 2.434.847 3.707-.527 1.271-1.584 1.438-3.219 2.02v3.232c1.632.58 2.692.749 3.219 2.019.53 1.282-.114 2.166-.847 3.707l2.285 2.286c1.562-.743 2.434-1.375 3.707-.847h.001c1.27.526 1.436 1.579 2.019 3.219h3.232c.582-1.636.75-2.69 2.027-3.222h.001c1.262-.524 2.12.101 3.698.851l2.285-2.286c-.744-1.563-1.375-2.433-.848-3.706.527-1.271 1.588-1.44 3.221-2.021zm-12 2.384c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z"/></svg>
+      </span>	
+      <form action="">
+		 <label for="">Escolha um cor de fundo:</label>
+         <input type="color" id="favcolor" name="favcolor" value="#ff0000">
+       </form>
+    </div>
+
+    
+	<header id="header">
+		<nav class="flex-menu">
+			<ul>
+				<li><a href="create.html?action=add">
+					<span class="material-icons">add</span>Cadastrar</a>
+				</li>
+				
+				<li><a href="list.html?action=list">
+					<span class="material-icons">question_answer</span>Diálogos</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	
+
+    <div class="box flex-animate-bottom" data-id="0">
+		<div id="demo" class="popup-content" >
+       <span id="innerHTML" class="dialog-transition" >Olá, eu sou o Will, posso te ajudar ? <br/> Informe o termo que deseja encontrar, ex: <br/><br/>
+			1. Inteligência Artificial <br/> 2. Engenharia de Software <br/> 3. Criptografia</span>
+
+		</div>
+
+
+
+		<div>
+			<div class="box-header box-content" ><span class="material-icons" id="btn-close">close</span></div>
+			 <div class="flex-item-search">
+				 <div id="search">
+					<input type="text" name="keyword" id="keyword" placeholder="Digite aqui o que deseja" >
+					<button type="button" class="search" >Buscar</button>
+				 </div>
+				 <div class="box-footer box-content"></div>
+			 </div>
+		</div>
+	</div>
+	<div class="item-active">
+		<a id="icone">
+			<img src="./public/images/avatar-weni.png" id="imagem" onmouseenter="toggleImageMouseEnter(this)"  
+			onmouseout="toggleImageMouseOut(this)">
+		</a>
+	</div>
+
+
+    <script type="text/javascript" src="./public/js/config.js"></script>	
+    <script type="text/javascript">
+
+
+	
+	const icon = document.getElementById('icone');
+    const button = document.querySelector('.search');
+    const close = document.getElementById('btn-close');
+	const inputOnKeyUp = document.getElementById('keyword');
+  
+    var box = document.getElementsByClassName('box')[0];
+	var span = document.getElementById('innerHTML');
+	var imagem = document.getElementById('imagem');
+      
+	icone.addEventListener('click', animate);   
+	button.addEventListener('click', handleChangedKeyword);
+    close.addEventListener('click', hideElement);
+	
+	inputOnKeyUp.addEventListener("keyup", onChangeKeypress);
+	inputOnKeyUp.addEventListener("keyup", onFieldIsEmpty);
+
+    window.addEventListener('keyup', function(e) {
+		var keyword = document.getElementById('keyword');
+	});
+
+	window.addEventListener("load", getAllTitles);
+
+	function onChangeKeypress(e) {
+		let keypress = e.which || e.keyCode;
+		var keyword = document.getElementById('keyword');
+		
+		if (keypress === 13) 
+			handleChangedKeyword();
+	}
+
+	function onFieldIsEmpty(e) {
+		const field = e.target.value;
+		if (field.length <= 0 ) {
+			span.innerHTML = '';
+		  
+		    getAllTitles();
+		}
+	}
+
+    function hideElement(event) {
+        animate(event);
+
+		span.innerHTML = ''; 
+		span.innerHTML = valor.text;
+    }
+      
+    function animate(element) {
+	    if (box._side == "top") {
+	        box._side = "bottom";
+	        box.classList.add('box-active');
+	        transition.begin(box, "transform translateY(700px) translateY(0) 1s", {
+	            beginFromCurrentValue: true
+	        });
+
+	    } else {
+	       box._side = "top";
+	       transition.begin(box, "transform translateX(0) translateY(650px) 0.4s", {
+	            beginFromCurrentValue: true
+	       });
+	    }
+	}
+    
+
+    /** 
+     * Função assíncrona p/ ler o json e filtrar todos o titulos
+     * realizando um filter no array retornado
+     * 
+     * */
+
+	async function getAllTitles() {
+		const titles = await fetch('data/keyword.json', { cache: 'reload'} );
+		const allTitles = await titles.json();
+
+		let counter = 1;
+
+		var items = 'Olá, eu sou o Will, posso te ajudar ? <br/><br/><br/>';
+
+		allTitles.filter(title => {
+			const { keyword } = title;
+
+		
+			if (counter <= 10 ) {
+
+				items += `${counter++} - ${keyword.toUpperCase()} <br>`;
+			}
+		});
+
+		span.innerHTML = ''; 
+	    span.innerHTML = items;
+
+		if (!titles.ok) {
+			 throw new Error("HTTP error, status = " + titles.status);
+		}
+
+	}
+
+
+
+	async function handleChangedKeyword() {
+		  let context = keyword.value;
+		  context = context.toLowerCase();
+		  const response = await fetch('data/keyword.json', {cache: "reload"});
+
+		  const result = await response.json();
+		  
+		  if (!response.ok) {
+			  throw new Error("HTTP error, status = " + response.status);
+		  }
+
+		  const data =  result.filter(item => item.keyword === context);
+          
+		  if (data.length == 0 || data === null) {
+			  span.innerHTML = ''; 
+			  notifyAudio(data);
+
+			  span.innerHTML = messageFromInnerHtml(keyword);
+			  return;
+		  }
+
+		  data.forEach(function(valor) {
+			   span.innerHTML = ''; 
+			   span.innerHTML = valor.text;
+		  });
+		  
+		  notifyAudio(data);
+	}
+
+	function messageFromInnerHtml(term) {
+	  	let termo = term.value;
+
+		let message = `Oops ! Ainda não sei responder sobre o termo: <span id="word"> ${term.value} </span> tente pesquisar por: ` + termo.toUpperCase();
+		
+		return message;
+	}
+
+	function toggleImageMouseEnter(image) {
+		  image.src = "./public/images/avatar-weni.png";
+	}
+
+	function toggleImageMouseOut(image) {
+		  image.src = "./public/images/avatar-weni.png";
+	}
+
+	function notifyAudio(data) {
+		  if (data.length !== 0) {
+			 return  new Audio('./public/audio/206875133.mp3').play();
+		  }
+		  return new Audio('./public/audio/notification.mp3').play();
+	}
+  
+  	function run() {
+
+	  const messages = [
+	     "olá, sou o will",
+	     "Em que posso te ajudar ?"
+	  ];
+
+	   for(var x = 1; x <= messages.length; x++ ) {
+	  	  setTimeout(function() {
+			   	  span.innerHTML += `<p> ${messages} </p>`;
+		  }, 3000);
+	   }
+  }
+
+ 
+
+</script>
+
+    
+</body>
+</html>
+
+
